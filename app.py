@@ -49,4 +49,9 @@ def report():
     c.execute("SELECT SUM(liters), SUM(price) FROM sales")
     total_liters, total_price = c.fetchone()
     conn.close()
-    return render_template('report.html', total_l)
+return render_template('report.html', total_liters=total_liters, total_price=total_price)
+
+if __name__ == '__main__':
+    init_db()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
