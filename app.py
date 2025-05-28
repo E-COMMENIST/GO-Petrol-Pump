@@ -9,12 +9,15 @@ def init_db():
     if not os.path.exists(DB_PATH):
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
-        c.execute('''CREATE TABLE sales (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            liters REAL,
-            price REAL,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )''')
+        c.execute('''
+            CREATE TABLE sales (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                liters REAL,
+                price REAL,
+                fuel_type TEXT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
         conn.commit()
         conn.close()
 
@@ -24,17 +27,20 @@ def index():
 
 @app.route('/sale', methods=['POST'])
 def sale():
-    liters = float(request.form['liters'])
-    price = float(request.form['price'])
-    fuel_type = request.form['fuel_type']
-    
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("INSERT INTO sales (liters, price, fuel_type) VALUES (?, ?, ?)", (liters, price, fuel_type))
-    conn.commit()
-    conn.close()
-    
-    return redirect('/sales')
+    try:
+        liters = float(request.form['liters'])
+        price = float(request.form['price'])
+        fuel_type = request.form['fuel_type']
+        
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("INSERT INTO sales (liters, price, fuel_type) VALUES (?, ?, ?)", (liters, price, fuel_type))
+        conn.commit()
+        conn.close()
+
+        return redirect('/sales')
+    except Exception as e:
+        return f"Error: {str(e)}", 500
 
 @app.route('/sales')
 def sales():
@@ -53,7 +59,6 @@ def report():
     total_liters, total_price = c.fetchone()
     conn.close()
     return render_template('report.html', total_liters=total_liters, total_price=total_price)
-
 
 if __name__ == '__main__':
     init_db()
