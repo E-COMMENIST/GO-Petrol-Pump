@@ -8,6 +8,13 @@
     <form action="/sale" method="POST">
         Liters: <input type="number" step="0.01" name="liters" required><br>
         Price: <input type="number" step="0.01" name="price" required><br>
+        Fuel Type:
+        <select name="fuel_type" required>
+            <option value="">--Select Fuel Type--</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Premium">Premium</option>
+        </select><br>
         <button type="submit">Submit</button>
     </form>
     <a href="/sales">View Sales</a> | <a href="/report">View Report</a>

@@ -26,9 +26,10 @@ def index():
 def sale():
     liters = float(request.form['liters'])
     price = float(request.form['price'])
+    fuel_type = request.form['fuel_type']
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("INSERT INTO sales (liters, price) VALUES (?, ?)", (liters, price))
+    c.execute("INSERT INTO sales (liters, price, fuel_type) VALUES (?, ?, ?)", (liters, price, fuel_type))
     conn.commit()
     conn.close()
     return redirect('/sales')
